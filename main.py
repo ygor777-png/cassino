@@ -7,18 +7,18 @@ simbolos = ['💥', '⚔', '⚡', '🚀', '👽', '🔫']
 
 #menu do mini cassino
 def menu():
-    print ('-='*20)
-    print ('''[ 1 ] - JOGAR
+    while True:
+        print ('-='*20)
+        print ('''[ 1 ] - JOGAR
 [ 2 ] - DEPOSITAR
 [ 3 ] - SACAR
 [ 4 ] - CONSULTAR SALDO
 [ 0 ] - SAIR
 ''')
-    while True:
         resposta = int(input('Oque deseja? '))
         if resposta == 1:
             if creditos > 0:
-                os.system ('cls')
+                limpar()
                 jogar()
             else:
                 print ('Você está sem saldo, por gentileza deposite.')
@@ -42,8 +42,29 @@ def jogar():
     time.sleep(1)
     print ('Vamos jogar!')
     time.sleep(1)
-    aposta = int(input('Quanto deseja apostar?'))
-    creditos -= aposta
-    print(f'Saldo atual {creditos}')
+    input('Quanto deseja apostar?')
+    limpar()
+    #creditos -= aposta
+    #print(f'Saldo atual {creditos}')
+
+    for i in range (3):
+        rolagem = [random.choice(simbolos) for i in range (3)]
+        print (' | '.join(rolagem))
+        time.sleep (0.2)
+        limpar()
+        
+    rolagem = [random.choice(simbolos) for i in range (3)]
+    print(' | '.join(rolagem))
+
+    if rolagem [0] == rolagem [1] == rolagem [2]:
+        print('Parabéns, você deu um mega ganho!!')
+        
+    elif rolagem [0] == rolagem [1] or rolagem [0] == rolagem [2] or rolagem [1] == rolagem [2]:
+        print ('Parabéns você ganhou um double!')
+    else:
+        print('Que pena, nao ganhou nada!')
+        
+def limpar():
+    os.system('cls')
 
 menu()
