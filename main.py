@@ -22,7 +22,6 @@ def menu():
                 jogar()
             else:
                 print ('Você está sem saldo, por gentileza deposite.')
-            #jogar()
         elif resposta == 2:
             break
             #depositar()
@@ -30,8 +29,7 @@ def menu():
             break
             #sacar()
         elif resposta == 4:
-            break
-            #consultar_saldo()
+            consultar_saldo()
         elif resposta == 0:
             break
         else:
@@ -58,7 +56,7 @@ def jogar():
 
     if rolagem [0] == rolagem [1] == rolagem [2]:
         print('Parabéns, você deu um mega ganho!!')
-        
+
     elif rolagem [0] == rolagem [1] or rolagem [0] == rolagem [2] or rolagem [1] == rolagem [2]:
         print ('Parabéns você ganhou um double!')
     else:
@@ -66,5 +64,8 @@ def jogar():
         
 def limpar():
     os.system('cls')
+
+def consultar_saldo():
+    print(f'Seu saldo atual é {creditos} creditos')
 
 menu()
