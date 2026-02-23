@@ -11,25 +11,39 @@ class BagsBet:
     def limpar(self):
         os.system ('cls' if os.name == 'nt' else 'clear')
 
+    #função ler numero do input 
+    def ler_numero_input (self):
+        while True:
+            self.texto = input ('Escolha uma opção: ').strip()
+
+            try:
+                self.numero = int(self.texto)
+                return self.numero
+            except ValueError:
+                print('🚫 Opção inválida, por gentileza digite uma opção válida! 🚫')
+
+
 #menu do mini cassino
     def menu(self):
         while True:
             print ('-='*20)
-            print ('-'*4, ' BAGS BET ', '-'*4)
+            print ('-'*4, '💰 BAGS BET 💰', '-'*4)
             print ('''[ 1 ] - JOGAR
 [ 2 ] - DEPOSITAR
 [ 3 ] - SACAR
 [ 4 ] - CONSULTAR SALDO
 [ 0 ] - SAIR
 ''')
-            resposta = int(input('Oque deseja? ').strip())
+            resposta = self.ler_numero_input()
             if resposta == 1:
                 if self.saldo > 0:
                     self.limpar()
                     self.jogar()
                 else:
                     self.limpar()
-                    print ('Você está sem saldo, por gentileza deposite.')
+                    print ('⛔ Você está sem saldo, por gentileza deposite. ⛔')
+                    time.sleep(3)
+                    self.limpar()
             elif resposta == 2:
                 self.limpar()
                 self.depositar_saldo()
@@ -44,126 +58,191 @@ class BagsBet:
                 break
             else:
                 self.limpar()
-                print ('Opção inválida, por gentileza digite uma opção válida!')
+                print ('🚫 Opção inválida, por gentileza digite uma opção válida! 🚫')
 
     #função jogar
     def jogar(self):
         time.sleep (1)
         print (f'SALDO R${self.saldo},00')
-        self.apostado = int (input('Quanto deseja apostar? R$').strip())
-        if self.apostado > self.saldo:
-            print('Você não tem saldo sulficiente!')
-            time.sleep (2)
-            return self.menu()
-        else:
-            self.limpar()
-            self.saldo -= self.apostado
-
-            for i in range (3):
-                rolagem = [random.choice(self.simbolos) for i in range (3)]
-                print (' | '.join(rolagem))
-                time.sleep (0.2)
+        while True:
+            self.texto_jogar = input (f'Quanto deseja apostar? (SALDO R${self.saldo},00)\n')
+            try:
+                self.numero_jogar = int(self.texto_jogar)
+            except ValueError:
+                print('🚫 Opção inválida, por gentileza digite uma opção válida! 🚫')
+                time.sleep(2)
                 self.limpar()
-            
-            rolagem = [random.choice(self.simbolos) for i in range (3)]
-            print(' | '.join(rolagem))
+                self.jogar()
 
-            if rolagem [0] == rolagem [1] == rolagem [2]:
-                self.ganho = self.apostado * 20
-                self.saldo += self.ganho
-                print('Parabéns, você deu um mega ganho!!')
-                print (f'Premio {self.ganho},00!!')
-                print(f'Saldo atualizado R${self.saldo},00')
-                self.resposta = int (input ('Deseja jogar novamente? [ 1 - SIM | 2 - NAO] '))
-                while True:
-                    if self.resposta == 1:
-                        self.limpar()
-                        self.jogar()
-                    elif self.resposta == 2:
-                        self.menu()
-                    else:
-                        print('Opção inválida, tente novamente!')
+            self.apostado = self.numero_jogar
 
-            elif rolagem [0] == rolagem [1] or rolagem [0] == rolagem [2] or rolagem [1] == rolagem [2]:
-                self.ganho = self.apostado * 2
-                self.saldo += self.ganho
-                print ('Parabéns você ganhou um double!')
-                print (f'Premio {self.ganho},00!!')
-                print (f'Saldo atualizado R${self.saldo},00')
-                self.resposta = int (input ('Deseja jogar novamente? [ 1 - SIM | 2 - NAO] '))
-                while True:
-                    if self.resposta == 1:
-                        self.limpar()
-                        self.jogar()
-                    elif self.resposta == 2:
-                        self.menu()
-                    else:
-                        print('Opção inválida, tente novamente!')
+            if self.apostado > self.saldo or self.apostado == 0:
+                print('⛔ Você não tem saldo sulficiente! ⛔')
+                time.sleep (2)
+                return self.menu()
             else:
-                print('Que pena, nao ganhou nada!')
-                print (f'Saldo atualizado R${self.saldo},00')
-                self.resposta = int (input ('Deseja jogar novamente? [ 1 - SIM | 2 - NAO] '))
-                while True:
-                    if self.resposta == 1:
-                        self.limpar()
-                        self.jogar()
-                    elif self.reposta == 2:
-                        self.menu()
-                    else:
-                        print('Opção inválida, tente novamente!')
+                self.limpar()
+                self.saldo -= self.apostado
+
+                print ('Girando slots 🤞🤞')
+                time.sleep (2)
+                self.limpar()
+                for i in range (5):
+                    rolagem = [random.choice(self.simbolos) for i in range (3)]
+                    print (' | '.join(rolagem))
+                    time.sleep (0.1)
+                    self.limpar()
+                
+                rolagem = [random.choice(self.simbolos) for i in range (3)]
+                print(' | '.join(rolagem))
+
+                if rolagem [0] == rolagem [1] == rolagem [2]:
+                    self.ganho = self.apostado * 20
+                    self.saldo += self.ganho
+                    print('Parabéns, você deu um mega ganho!!🎊🎊')
+                    print (f'Premio {self.ganho},00!!')
+                    print(f'Saldo atualizado R${self.saldo},00')
+                    print ('Deseja jogar novamente? [ 1 - SIM | 2 - NAO] ')
+                    self.resposta = self.ler_numero_input()
+                    
+                    while True:
+                        if self.resposta == 1:
+                            if self.saldo <= 0:
+                                print ('⛔ Você não tem saldo! Deposite para jogar. ⛔')
+                                time.sleep (3)
+                                self.menu()
+                            else:
+                                self.limpar()
+                                self.jogar()
+                        elif self.resposta == 2:
+                            self.menu()
+                        else:
+                            print('🚫 Opção inválida, tente novamente! 🚫')
+                            time.sleep(3)
+                            self.limpar()
+                            self.jogar()
+
+                elif rolagem [0] == rolagem [1] or rolagem [0] == rolagem [2] or rolagem [1] == rolagem [2]:
+                    self.ganho = self.apostado * 2
+                    self.saldo += self.ganho
+                    print ('Parabéns você ganhou um double! 🎉')
+                    print (f'Premio {self.ganho},00!!')
+                    print (f'Saldo atualizado R${self.saldo},00')
+                    print ('Deseja jogar novamente? [ 1 - SIM | 2 - NAO] ')
+                    self.resposta = self.ler_numero_input()
+                    
+                    while True:
+                        if self.resposta == 1:
+                            if self.saldo <= 0:
+                                print ('⛔ Você não tem saldo! Deposite para jogar. ⛔')
+                                time.sleep(3)
+                                self.menu()
+                            else:
+                                self.limpar()
+                                self.jogar()
+                        elif self.resposta == 2:
+                            self.menu()
+                        else:
+                            print('🚫 Opção inválida, tente novamente! 🚫')
+                else:
+                    print('Que pena, nao ganhou nada! ❌❌')
+                    print (f'Saldo atualizado R${self.saldo},00')
+                    print ('Deseja jogar novamente? 🔁 [ 1 - SIM | 2 - NAO] ')
+                    self.resposta = self.ler_numero_input()
+                    
+                    while True:
+                        if self.resposta == 1:
+                            if self.saldo <= 0:
+                                self.limpar()
+                                print ('⛔ Você não tem saldo! Deposite para jogar. ⛔')
+                                time.sleep(3)
+                                self.limpar()
+                                return self.menu()
+                            else:
+                                self.limpar()
+                                self.jogar()
+                        elif self.resposta == 2:
+                            self.menu()
+                        else:
+                            print('🚫 Opção inválida, tente novamente!🚫')
+                            time.sleep(3)
+                            self.limpar()
+                            self.jogar()
     
     #função consultar saldo
     def consultar_saldo(self):
             print(f'Seu saldo atual é R${self.saldo},00')
 
+
     #função depositar saldo
     def depositar_saldo(self):
-        self.saldo_deposito = int(input (f'Quanto de saldo você deseja depositar? ').strip())
-        self.saldo += self.saldo_deposito
-        self.limpar()
-        print (f'Saldo depositado, seu saldo atual é R${self.saldo}.')
-        time.sleep(1)
         while True:
-            print ('''[ 1 ] - RETORNAR AO MENU
-[ 2 ] - JOGAR''')
-            self.resposta = int (input ('Oque deseja? '))
+            self.texto_depositar = (input (f'Quanto de saldo você deseja depositar? ').strip())
+            try:
+                self.saldo_deposito = int(self.texto_depositar)
+            except ValueError:
+                print('🚫 Opção inválida, tente novamente!🚫')
+                time.sleep(2)
+                self.limpar()
+                self.depositar_saldo()
+                
 
-            if self.resposta == 1:
-                self.limpar()
-                self.menu()
-            elif self.resposta == 2:
-                self.limpar()
-                self.jogar()
-            else:
-                self.limpar()
-                time.sleep(1)
-                print ('Opção inválida, tente novamente')
+            self.saldo += self.saldo_deposito
+            self.limpar()
+            print (f'Saldo depositado, seu saldo atual é R${self.saldo}.')
+            time.sleep(1)
+            while True:
+                print ('''[ 1 ] - RETORNAR AO MENU
+[ 2 ] - JOGAR''')
+                #self.texto = (input ('Oque deseja? '))
+                self.resposta = self.ler_numero_input()
+
+                if self.resposta == 1:
+                    self.limpar()
+                    self.menu()
+                elif self.resposta == 2:
+                    self.limpar()
+                    self.jogar()
+                else:
+                    self.limpar()
+                    time.sleep(1)
+                    print ('Opção inválida, tente novamente')
     
     #função sacar saldo
     def sacar_saldo(self):
-        self.saldo_sacar = int (input (f'Quanto de saldo você quer sacar? (SALDO R${self.saldo},00) '))
-        if self.saldo < self.saldo_sacar:
-            print ('Você não tem saldo sulficiente, tente novamente!')
-        else:
-            self.saldo -= self.saldo_sacar
-            self.limpar()
-            time.sleep (1)
-            print ('Saque realizado com sucesso ☑')
-            print (f'Saldo atualizado R${self.saldo},00')
-        print ('''[ 1 ] - RETONAR AO MENU
-[ 2 ] - JOGAR''')
-        self.resposta = int (input('Oque deseja? ').strip())
         while True:
-            if self.resposta == 1:
+            self.texto_sacar = (input (f'Quanto de saldo você quer sacar? (SALDO R${self.saldo},00) '))
+            try:
+                self.saldo_sacar = int(self.texto_sacar)
+            except ValueError:
+                print('🚫 Opção inválida, tente novamente!🚫')
+                time.sleep(2)
                 self.limpar()
-                time.sleep(1)
-                self.menu()
-            elif self.resposta == 2:
-                self.limpar()
-                time.sleep(1)
-                self.jogar()
+                self.sacar_saldo()
+                
+            if self.saldo < self.saldo_sacar:
+                print ('Você não tem saldo sulficiente, tente novamente!')
             else:
-                print ('Opção inválida, tente novamente')
+                self.saldo -= self.saldo_sacar
+                self.limpar()
+                time.sleep (1)
+                print ('Saque realizado com sucesso ☑')
+                print (f'Saldo atualizado R${self.saldo},00')
+            print ('''[ 1 ] - RETONAR AO MENU
+[ 2 ] - JOGAR''')
+            self.texto = (input('Oque deseja? ').strip())
+            self.resposta = self.ler_numero_input()
+            while True:
+                if self.resposta == 1:
+                    self.limpar()
+                    time.sleep(1)
+                    self.menu()
+                elif self.resposta == 2:
+                    self.limpar()
+                    time.sleep(1)
+                    self.jogar()
+                else:
+                    print ('Opção inválida, tente novamente')
 
 if __name__ == '__main__':
     BagsBet().menu()
