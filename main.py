@@ -230,7 +230,7 @@ class BagsBet:
                 print (f'Saldo atualizado R${self.saldo},00')
             print ('''[ 1 ] - RETONAR AO MENU
 [ 2 ] - JOGAR''')
-            self.texto = (input('Oque deseja? ').strip())
+            
             self.resposta = self.ler_numero_input()
             while True:
                 if self.resposta == 1:
