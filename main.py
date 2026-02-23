@@ -66,20 +66,6 @@ class BagsBet:
                 self.limpar()
                 print ('🚫 Opção inválida, por gentileza digite uma opção válida! 🚫')
 
-#função girar slots
-    #def girar(self):
-        #self.emojis = list(self.simbolos.keys())
-        #return random.choices(self.simbolos, k=3)
-    
-#função calcular o premio
-    #def calcular_premio(self, aposta, rolagem):
-        #cont = Counter (rolagem)
-
-        #soma apenas os repitodos
-        #mult_total = sum(self.simbolos[s] * qtd for s in cont.items() if qtd >= 2)
-
-        #return aposta * mult_total
-
     #função jogar
     def jogar(self):
         time.sleep (1)
@@ -113,18 +99,18 @@ class BagsBet:
                     rolagem = [random.choice(self.simbolos) for i in range (3)]
                     rolagem2 = [random.choice(self.simbolos) for i in range (3)]
                     rolagem3 = [random.choice(self.simbolos) for i in range (3)]
-                    print (' | '.join(rolagem))
-                    print (' | '.join(rolagem2))
-                    print (' | '.join(rolagem3))
+                    print ('  |  '.join(rolagem))
+                    print ('  |  '.join(rolagem2))
+                    print ('  |  '.join(rolagem3))
                     time.sleep (0.1)
                     self.limpar()
                 
                 rolagem = [random.choice(self.simbolos) for i in range (3)]
                 rolagem2 = [random.choice(self.simbolos) for i in range (3)]
                 rolagem3 = [random.choice(self.simbolos) for i in range (3)]
-                print(' | '.join(rolagem))
-                print(' | '.join(rolagem2))
-                print(' | '.join(rolagem3))
+                print('  |  '.join(rolagem))
+                print('  |  '.join(rolagem2))
+                print('  |  '.join(rolagem3))
 
                 #verifica se bateu todas as figuras iguais e recebe um mega ganho
                 if rolagem [0] == rolagem [1] == rolagem [2]:
@@ -147,6 +133,8 @@ class BagsBet:
                                 self.limpar()
                                 self.jogar()
                         elif self.resposta == 2:
+                            self.limpar()
+                            time.sleep(2)
                             self.menu()
                         else:
                             print('🚫 Opção inválida, tente novamente! 🚫')
@@ -175,6 +163,8 @@ class BagsBet:
                                 self.limpar()
                                 self.jogar()
                         elif self.resposta == 2:
+                            self.limpar()
+                            time.sleep(1)
                             self.menu()
                         else:
                             print('🚫 Opção inválida, tente novamente! 🚫')
@@ -198,6 +188,8 @@ class BagsBet:
                                 self.limpar()
                                 self.jogar()
                         elif self.resposta == 2:
+                            self.limpar()
+                            time.sleep(1)
                             self.menu()
                         else:
                             print('🚫 Opção inválida, tente novamente!🚫')
