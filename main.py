@@ -2,7 +2,6 @@ import time
 import random
 import os
 import sys
-import tkinter
 
 class BagsBet:
     def __init__(self):
