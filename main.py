@@ -5,12 +5,7 @@ from collections import Counter
 
 class BagsBet:
     def __init__(self):
-        self.simbolos = ['💥',
-                        '⚔',
-                        '⚡',
-                        '🚀',
-                        '👽',
-                        '🔫']
+        self.simbolos = ['💥', '⚔', '⚡', '🚀', '👽', '🔫']
         self.saldo = 0
     
     #função limpar terminal
@@ -66,9 +61,40 @@ class BagsBet:
                 self.limpar()
                 print ('🚫 Opção inválida, por gentileza digite uma opção válida! 🚫')
 
+    #funçao girar a grade
+    def girar_grade(self):
+        return [[random.choice(self.simbolos) for i in range(3)] for i in range(3)]
+    
+    #imprimir grade no terminal
+    def imprmir_grade(self, grade):
+        for linha in grade:
+            print(' | '.join(linha))
+
+    #retonar as 5 linhas cada uma é uma lista com 3 simbolos
+    def linhas_payline(self, grade):
+        return[
+            grade [0],
+            grade [1],
+            grade [2],
+            [grade[0][0], grade[1][1], grade [2][2]],
+            [grade[0][2], grade[1][1], grade [2][0]],
+        ]
+    
+    def linhas_ganhadoras (self, grade):
+        self.ganhadoras = []
+        for i, linha in enumerate (self.linhas_payline(grade)):
+            if linha [0] == linha [1] == linha [2]:
+                self.ganhadoras.append((i, linha[0]))
+        return self.ganhadoras
+
+    #calcula os premios
+    def calcular_premios (self):
+        return len(self.ganhadoras) * self.apostado * self.multi_por_linha
+
     #função jogar
     def jogar(self):
         time.sleep (1)
+        self.multi_por_linha = 2
         print (f'SALDO R${self.saldo:.2f}')
         while True:
             self.texto_jogar = input (f'Quanto deseja apostar? (SALDO R${self.saldo:.2f})\n')
@@ -94,108 +120,31 @@ class BagsBet:
                 time.sleep (2)
                 self.limpar()
 
-                #rolagem das figuras 3x3
-                for i in range (5):
-                    rolagem = [random.choice(self.simbolos) for i in range (3)]
-                    rolagem2 = [random.choice(self.simbolos) for i in range (3)]
-                    rolagem3 = [random.choice(self.simbolos) for i in range (3)]
-                    print ('  |  '.join(rolagem))
-                    print ('  |  '.join(rolagem2))
-                    print ('  |  '.join(rolagem3))
+                for i in range(5):
+                    grade = self.girar_grade()
+                    self.imprmir_grade(grade)
                     time.sleep (0.1)
                     self.limpar()
                 
-                rolagem = [random.choice(self.simbolos) for i in range (3)]
-                rolagem2 = [random.choice(self.simbolos) for i in range (3)]
-                rolagem3 = [random.choice(self.simbolos) for i in range (3)]
-                print('  |  '.join(rolagem))
-                print('  |  '.join(rolagem2))
-                print('  |  '.join(rolagem3))
+                #resultado do giro
+                grade = self.girar_grade()
+                self.imprmir_grade(grade)
 
-                #verifica se bateu todas as figuras iguais e recebe um mega ganho
-                if rolagem [0] == rolagem [1] == rolagem [2]:
-                    self.ganho = self.apostado * 20
-                    self.saldo += self.ganho
-                    print('Parabéns, você deu um mega ganho!!🎊🎊')
-                    print (f'Premio {self.ganho:.2f}!!')
-                    print(f'Saldo atualizado R${self.saldo:.2f}')
-                    print ('Deseja jogar novamente? [ 1 - SIM | 2 - NAO] ')
-                    self.resposta = self.ler_numero_input()
-                    
-                    #verifica se tem saldo pra continuar a apostar
-                    while True:
-                        if self.resposta == 1:
-                            if self.saldo <= 0:
-                                print ('⛔ Você não tem saldo! Deposite para jogar. ⛔')
-                                time.sleep (3)
-                                self.menu()
-                            else:
-                                self.limpar()
-                                self.jogar()
-                        elif self.resposta == 2:
-                            self.limpar()
-                            time.sleep(2)
-                            self.menu()
-                        else:
-                            print('🚫 Opção inválida, tente novamente! 🚫')
-                            time.sleep(3)
-                            self.limpar()
-                            self.jogar()
+                ganhadoras = self.linhas_ganhadoras(grade)
+                premio = self.calcular_premios()
 
-                #verifica se teve duas figuras iguais e recebe um pequeno ganho
-                elif rolagem [0] == rolagem [1] or rolagem [0] == rolagem [2] or rolagem [1] == rolagem [2]:
-                    self.ganho = self.apostado * 2
-                    self.saldo += self.ganho
-                    print ('Parabéns você ganhou um double! 🎉')
-                    print (f'Premio {self.ganho:.2f}!!')
-                    print (f'Saldo atualizado R${self.saldo:.2f}')
-                    print ('Deseja jogar novamente? [ 1 - SIM | 2 - NAO] ')
-                    self.resposta = self.ler_numero_input()
-                    
-                    #verifica se ainda tem saldo pra continuar a apostar
-                    while True:
-                        if self.resposta == 1:
-                            if self.saldo <= 0:
-                                print ('⛔ Você não tem saldo! Deposite para jogar. ⛔')
-                                time.sleep(3)
-                                self.menu()
-                            else:
-                                self.limpar()
-                                self.jogar()
-                        elif self.resposta == 2:
-                            self.limpar()
-                            time.sleep(1)
-                            self.menu()
-                        else:
-                            print('🚫 Opção inválida, tente novamente! 🚫')
-                
-                #verifica se nao ganhar nada
+                if ganhadoras:
+                    self.saldo += premio
+                    print (f'Voce ganhou! Premio {premio:.2f}')
+                    print (f'Saldo atualizado {self.saldo:.2f}')
+                    time.sleep(2)
+                    self.jogar()
                 else:
-                    print('Que pena, nao ganhou nada! ❌❌')
-                    print (f'Saldo atualizado R${self.saldo:.2f}')
-                    print ('Deseja jogar novamente? 🔁 [ 1 - SIM | 2 - NAO] ')
-                    self.resposta = self.ler_numero_input()
+                    print('Sem ganho por aqui!')
+                    time.sleep(2)
+                    self.limpar()
+                    self.jogar()
                     
-                    while True:
-                        if self.resposta == 1:
-                            if self.saldo <= 0:
-                                self.limpar()
-                                print ('⛔ Você não tem saldo! Deposite para jogar. ⛔')
-                                time.sleep(3)
-                                self.limpar()
-                                return self.menu()
-                            else:
-                                self.limpar()
-                                self.jogar()
-                        elif self.resposta == 2:
-                            self.limpar()
-                            time.sleep(1)
-                            self.menu()
-                        else:
-                            print('🚫 Opção inválida, tente novamente!🚫')
-                            time.sleep(3)
-                            self.limpar()
-                            self.jogar()
     
     #função consultar saldo
     def consultar_saldo(self):
